@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEURAL SCRIBE // Handwritten Character Recognition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="grid-overlay"></div>
+<div class="scanline"></div>
+
+<header class="site-header">
+  <div class="logo">
+    <span class="logo-bracket">[</span>NEURAL<span class="logo-accent">SCRIBE</span><span class="logo-bracket">]</span>
+  </div>
+  <div class="status-chip" id="statusChip">
+    <span class="status-dot"></span>
+    <span id="statusText">CHECKING MODEL...</span>
+  </div>
+</header>
+
+<main class="stage">
+  <section class="intro">
+    <h1 class="glitch" data-text="HANDWRITTEN CHARACTER RECOGNITION">HANDWRITTEN CHARACTER RECOGNITION</h1>
+    <p class="subtitle">CNN-powered inference &mdash; draw a digit or letter, the network decodes it in real time.</p>
+  </section>
+
+  <section class="workspace">
+    <div class="panel canvas-panel">
+      <div class="panel-header">
+        <span class="panel-title">01 // INPUT MATRIX</span>
+        <div class="panel-actions">
+          <button id="clearBtn" class="btn-ghost">CLEAR</button>
+        </div>
+      </div>
+      <canvas id="drawCanvas" width="320" height="320"></canvas>
+      <div class="brush-row">
+        <label for="brushSize">BRUSH</label>
+        <input type="range" id="brushSize" min="8" max="32" value="18">
+        <button id="predictBtn" class="btn-primary">ANALYZE</button>
+      </div>
+    </div>
+
+    <div class="panel result-panel">
+      <div class="panel-header">
+        <span class="panel-title">02 // PREDICTION OUTPUT</span>
+      </div>
+
+      <div class="prediction-display">
+        <div class="prediction-char" id="predictionChar">?</div>
+        <div class="confidence-bar-wrap">
+          <div class="confidence-bar" id="confidenceBar"></div>
+        </div>
+        <div class="confidence-label" id="confidenceLabel">AWAITING INPUT</div>
+      </div>
+
+      <div class="topk-list" id="topkList"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <span>MODEL: CNN &middot; DATASET: EMNIST/MNIST &middot; EXTENDABLE TO CRNN SEQUENCE DECODING</span>
+</footer>
+
+<script src="{{ url_for('static', filename='js/canvas.js') }}"></script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

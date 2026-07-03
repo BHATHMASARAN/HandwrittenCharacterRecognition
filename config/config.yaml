@@ -1,0 +1,75 @@
+project:
+  name: "HandwrittenCharRecognition"
+  version: "1.0.0"
+  seed: 42
+  device: "auto"  # auto | cpu | cuda
+
+data:
+  root_dir: "data/raw"
+  processed_dir: "data/processed"
+  dataset: "emnist"          # mnist | emnist
+  emnist_split: "balanced"   # byclass | bymerge | balanced | letters | digits | mnist
+  image_size: 28
+  channels: 1
+  val_split: 0.1
+  batch_size: 128
+  num_workers: 4
+  normalize_mean: 0.1736
+  normalize_std: 0.3317
+  augment: true
+  augmentation:
+    rotation_degrees: 10
+    translate: [0.1, 0.1]
+    scale: [0.9, 1.1]
+
+model:
+  architecture: "cnn"        # cnn | crnn
+  cnn:
+    conv_channels: [32, 64, 128]
+    kernel_size: 3
+    pool_size: 2
+    dropout: 0.4
+    fc_hidden: 256
+  crnn:
+    input_height: 32           # fixed by the CNN backbone's pooling arithmetic
+    cnn_out_channels: 256
+    rnn_hidden: 256
+    rnn_layers: 2
+    bidirectional: true
+    dropout: 0.3
+    max_sequence_length: 32
+
+training:
+  epochs: 30
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  optimizer: "adamw"         # adam | adamw | sgd
+  scheduler: "cosine"        # step | cosine | plateau
+  early_stopping_patience: 6
+  grad_clip_norm: 5.0
+  label_smoothing: 0.05
+  checkpoint_dir: "checkpoints"
+  save_best_only: true
+  log_interval: 50
+
+mlflow:
+  enabled: true
+  tracking_uri: "mlruns"
+  experiment_name: "handwritten_char_recognition"
+
+inference:
+  model_path: "checkpoints/best_model.pt"
+  crnn_model_path: "checkpoints/best_crnn_model.pt"
+  confidence_threshold: 0.6
+  top_k: 3
+
+logging:
+  log_dir: "logs"
+  level: "INFO"
+
+api:
+  host: "0.0.0.0"
+  port: 5000
+  debug: false
+  max_upload_size_mb: 5
+  allowed_extensions: ["png", "jpg", "jpeg", "bmp"]
